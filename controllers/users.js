@@ -4,7 +4,6 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 
 exports.login = async (req, res) => {
-  console.log(req.body);
   let { email, password } = req.body;
   const schema = Joi.object().keys({
     email: Joi.string().email().required(),
@@ -43,7 +42,7 @@ exports.signup = async (req, res) => {
   let { email, name, password } = req.body;
 
   const schema = Joi.object().keys({
-    name: Joi.string().min(5).max(12).required(),
+    name: Joi.string().min(5).max(20).required(),
     email: Joi.string().email().required(),
     password: Joi.string().alphanum().min(8).max(12).required(),
   });
@@ -75,4 +74,8 @@ exports.signup = async (req, res) => {
           .send({ message: "User already exists", error: true });
       } else return res.status(200).send({ message: e, error: true });
     });
+};
+
+exports.validateToken = (req, res) => {
+  res.send({ message: "Validation Success" });
 };

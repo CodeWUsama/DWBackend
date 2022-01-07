@@ -6,7 +6,7 @@ var logger = require("morgan");
 const mongoose = require("mongoose");
 var usersRouter = require("./routes/users");
 var walletRouter = require("./routes/wallet");
-require('dotenv').config();
+require("dotenv").config();
 
 var app = express();
 
@@ -30,10 +30,10 @@ app.use(function (req, res, next) {
 
 // error handler
 mongoose
-  .connect(
-    process.env.MONGO_URI,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then((result) => {
     console.log("Database Connected!");
     app.use(function (err, req, res, next) {
