@@ -30,10 +30,13 @@ app.use(function (req, res, next) {
 
 // error handler
 mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://UsamaBilal:walletadmin@nodejspractice.7kuts.mongodb.net/DigitalWallet?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then((result) => {
     console.log("Database Connected!");
     app.use(function (err, req, res, next) {
