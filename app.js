@@ -6,6 +6,7 @@ var logger = require("morgan");
 const mongoose = require("mongoose");
 var usersRouter = require("./routes/users");
 var walletRouter = require("./routes/wallet");
+require('dotenv').config();
 
 var app = express();
 
@@ -30,7 +31,7 @@ app.use(function (req, res, next) {
 // error handler
 mongoose
   .connect(
-    "mongodb+srv://UsamaBilal:walletadmin@nodejspractice.7kuts.mongodb.net/DigitalWallet?retryWrites=true&w=majority",
+    process.env.MONGO_URI,
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {
