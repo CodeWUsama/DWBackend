@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
       if (user?.status && bcrypt.compareSync(password, user.password)) {
         const token = jwt.sign(
           {
-            email,
+            userId: user.id,
           },
           "wallet!"
         );

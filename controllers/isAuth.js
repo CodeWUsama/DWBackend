@@ -5,6 +5,7 @@ exports.isAuth = (req, res, next) => {
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, "wallet!");
+    req.userId = decodedToken.userId;
   } catch (err) {
     return res.status(200).json({
       message: "Please login again.",

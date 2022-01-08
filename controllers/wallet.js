@@ -12,9 +12,8 @@ exports.getWallet = (req, res) => {
   const startOfDay = moment().startOf("day").format("YYYY-MM-DD HH:mm:ss");
   const endOfDay = moment().endOf("day").format("YYYY-MM-DD HH:mm:ss");
 
-  console.log(startOfDay, endOfDay);
-
   WalletRecord.find({
+    userId: req.userId,
     date: {
       $gte: new Date(startOfMonth),
       $lt: new Date(endOfMonth),
@@ -35,6 +34,7 @@ exports.getWallet = (req, res) => {
     let cash = totalIncome - totalExpense;
 
     WalletRecord.find({
+      userId: req.userId,
       date: {
         $gte: new Date(startOfWeek),
         $lt: new Date(endOfWeek),
@@ -47,6 +47,7 @@ exports.getWallet = (req, res) => {
       );
 
       WalletRecord.find({
+        userId: req.userId,
         date: {
           $gte: new Date(startOfDay),
           $lt: new Date(endOfDay),
@@ -74,6 +75,7 @@ exports.getWallet = (req, res) => {
 
 exports.postWallet = async (req, res) => {
   let { label, title, amount, date, description } = req.body;
+  let userId = req.userId;
   const schema = Joi.object().keys({
     label: Joi.string().valid("expense", "income").required(),
     title: Joi.string().required(),
@@ -95,6 +97,7 @@ exports.postWallet = async (req, res) => {
     amount,
     date,
     description,
+    userId,
   });
 
   record
