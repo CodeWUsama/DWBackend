@@ -113,3 +113,46 @@ exports.postWallet = async (req, res) => {
       return res.status(200).send({ message: e, error: true });
     });
 };
+
+exports.getHistory = async (req, res) => {
+  const startOfMonth = moment().startOf("month").format("YYYY-MM-DD HH:mm:ss");
+  const endOfMonth = moment().endOf("month").format("YYYY-MM-DD HH:mm:ss");
+  const startOfWeek = moment().startOf("week").format("YYYY-MM-DD HH:mm:ss");
+  const endOfWeek = moment().endOf("week").format("YYYY-MM-DD HH:mm:ss");
+  const startOfYear = moment().startOf("year").format("YYYY-MM-DD HH:mm:ss");
+  const endOfYear = moment().endOf("year").format("YYYY-MM-DD HH:mm:ss");
+
+  let userId = req.userId;
+
+  let monthlyRecords = await WalletRecord.find({
+    userId,
+    date: {
+      $gte: new Date(startOfMonth),
+      $lt: new Date(endOfMonth),
+    },
+  }).sort({ date: -1 });
+
+  let weeklyRecords = await WalletRecord.find({
+    userId,
+    date: {
+      $gte: new Date(startOfWeek),
+      $lt: new Date(endOfWeek),
+    },
+  }).sort({ date: -1 });
+
+  let yearlyRecords = await WalletRecord.find({
+    userId,
+    date: {
+      $gte: new Date(startOfYear),
+      $lt: new Date(endOfYear),
+    },
+  }).sort({ date: -1 });
+
+  res.send({
+    data: {
+      monthlyRecords,
+      weeklyRecords,
+      yearlyRecords,
+    },
+  });
+};
