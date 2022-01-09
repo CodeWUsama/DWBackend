@@ -117,10 +117,13 @@ exports.postWallet = async (req, res) => {
 exports.getHistory = async (req, res) => {
   const startOfMonth = moment().startOf("month").format("YYYY-MM-DD HH:mm:ss");
   const endOfMonth = moment().endOf("month").format("YYYY-MM-DD HH:mm:ss");
-  const startOfWeek = moment().startOf("week").format("YYYY-MM-DD HH:mm:ss");
-  const endOfWeek = moment().endOf("week").format("YYYY-MM-DD HH:mm:ss");
+  const startOfWeek = moment().startOf("isoWeek").format("YYYY-MM-DD HH:mm:ss");
+  const endOfWeek = moment().endOf("isoWeek").format("YYYY-MM-DD HH:mm:ss");
   const startOfYear = moment().startOf("year").format("YYYY-MM-DD HH:mm:ss");
   const endOfYear = moment().endOf("year").format("YYYY-MM-DD HH:mm:ss");
+
+  console.log(startOfWeek);
+  console.log(endOfWeek);
 
   let userId = req.userId;
 
