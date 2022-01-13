@@ -7,8 +7,8 @@ exports.getWallet = (req, res) => {
 
   const startOfMonth = moment().startOf("month").format("YYYY-MM-DD HH:mm:ss");
   const endOfMonth = moment().endOf("month").format("YYYY-MM-DD HH:mm:ss");
-  const startOfWeek = moment().startOf("week").format("YYYY-MM-DD HH:mm:ss");
-  const endOfWeek = moment().endOf("week").format("YYYY-MM-DD HH:mm:ss");
+  const startOfWeek = moment().startOf("isoWeek").format("YYYY-MM-DD HH:mm:ss");
+  const endOfWeek = moment().endOf("isoWeek").format("YYYY-MM-DD HH:mm:ss");
   const startOfDay = moment().startOf("day").format("YYYY-MM-DD HH:mm:ss");
   const endOfDay = moment().endOf("day").format("YYYY-MM-DD HH:mm:ss");
 
@@ -122,9 +122,6 @@ exports.getHistory = async (req, res) => {
   const startOfYear = moment().startOf("year").format("YYYY-MM-DD HH:mm:ss");
   const endOfYear = moment().endOf("year").format("YYYY-MM-DD HH:mm:ss");
 
-  console.log(startOfWeek);
-  console.log(endOfWeek);
-
   let userId = req.userId;
 
   let monthlyRecords = await WalletRecord.find({
@@ -158,4 +155,48 @@ exports.getHistory = async (req, res) => {
       yearlyRecords,
     },
   });
+};
+
+exports.deleteRecord = async (req, res) => {
+  let id = req.params.id;
+  WalletRecord.deleteOne({ _id: id })
+    .then((result) => {
+      return res.send({ message: "Record deleted successfully" });
+    })
+    .catch((e) => {
+      return res.send({ message: e.message, error: true });
+    });
+};
+
+exports.updateRecord = async (req, res) => {
+  let id = req.params.id;
+  let { title, label, amount, date, description } = req.body;
+  console.log(amount);
+  const schema = Joi.object().keys({
+    label: Joi.string().valid("expense", "income").required(),
+    title: Joi.string().required(),
+    amount: Joi.number().required(),
+    date: Joi.date().required(),
+    description: Joi.string().allow(null, ""),
+  });
+  let validation = await schema.validate(req.body);
+  if (validation.error) {
+    return res
+      .status(200)
+      .send({ message: validation.error.details[0].message, error: true });
+  }
+  WalletRecord.findOne({ _id: id })
+    .then((result) => {
+      result.title = title;
+      result.label = label;
+      result.amount = amount;
+      result.date = date;
+      result.description = description;
+      result.save().then((result2) => {
+        res.send({ message: "Record updated successfully" });
+      });
+    })
+    .catch((e) => {
+      res.send({ message: e.message, error: true });
+    });
 };
